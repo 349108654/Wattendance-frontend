@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Alert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import cover from "./images/background.png";
 
@@ -48,6 +49,8 @@ export default function SignIn(props) {
 
   const navigate = useNavigate();
 
+  const [alert, setAlert] = React.useState(null);
+
   const handleSubmit = async (event) => {
     console.log("ok");
     event.preventDefault();
@@ -75,17 +78,10 @@ export default function SignIn(props) {
       navigate("/profile");
     } else {
       if (result.error === 'password incorrect') {
-        //notify user
+        setAlert(<Alert style={{textAlign:'left'}} variant='outlined' severity="error">Password Incorrect</Alert>)
       } else if (result.error === 'no user') {
-        //prompt user to sign up
+        setAlert(<Alert style={{textAlign:'left'}} variant='outlined'severity="warning">Sorry, we can't find an account with this email! <br/><Link href='signup'>Sign Up </Link></Alert>)
       }
-
-
-      //TEMP---------------
-      props.login(null);
-      //setUser(result.user);
-      navigate("/profile");
-      //-------------------
     }
   };
 
@@ -135,10 +131,11 @@ export default function SignIn(props) {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
+              {alert}
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
-              />
+              /> */}
               <Button
                 type="submit"
                 fullWidth
@@ -149,11 +146,11 @@ export default function SignIn(props) {
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
+                {/* <Grid item xs>
                   <Link href="#" variant="body2">
                     Forgot password?
                   </Link>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                   <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}

@@ -6,11 +6,9 @@ import Navbar from './Navbar';
 import './App.css';
 import * as React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-
 import SignUp from './SignUp';
 import Landing from './Landing';
 import Survey from './Survey'
-
 import UserContext from './UserContext.js';
 
 
@@ -31,7 +29,7 @@ function App() {
     setUser(null);
   }
 
-  
+
   let AvailableRoutes;
   if (loginState) {
     AvailableRoutes = () => (

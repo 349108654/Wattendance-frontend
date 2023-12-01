@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Alert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import cover from "./images/background.png";
 import UserContext from './UserContext.js';
@@ -46,7 +47,7 @@ const theme = createTheme({
 export default function SignUp(props) {
   const setUser = React.useContext(UserContext).function;
   const navigate = useNavigate();
-
+  const [alert, setAlert] = React.useState(null);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -62,7 +63,8 @@ export default function SignUp(props) {
         lastName: data.get('lastName')
       })
     }
-    const response = await fetch('http://18.223.107.181:3600/signup', options);
+    const response = await fetch('http://localhost:3600/signup', options);
+    //const response = await fetch('http://18.223.107.181:3600/signup', options);
     const result = await response.json();
     console.log(result);
 
@@ -70,7 +72,7 @@ export default function SignUp(props) {
       props.login(result.user);
       navigate("/profile");
     } else {
-      //say user already exists
+      setAlert(<Alert style={{textAlign:'left'}} variant='outlined' severity="warning">An account already exists with this email! <br/><Link href='login'>Log In</Link></Alert>)
     }
   };
 
@@ -150,6 +152,7 @@ export default function SignUp(props) {
                   />
                 </Grid>
               </Grid>
+              {alert}
               <Button
                 type="submit"
                 fullWidth

@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
+import { Link } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Heatmap from './Github';
 import NoOfSubmissions from './userCard';
@@ -144,7 +144,7 @@ export default function Album() {
                 >
                   Software Engineering
                 </Typography>
-                <Link style={{ textDecoration: "none" }} href='/survey'>
+                <Link style={{ textDecoration: "none" }} to={`/survey`}>
                   <Button variant="contained" color="primary" sx={{ display: 'block', width: "320px" }}>Complete a survey about yourself</Button>
                 </Link>
               </Stack>

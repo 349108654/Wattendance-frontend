@@ -11,7 +11,6 @@ import "./Github.css";
 function Heatmap() {
   const user = React.useContext(UserContext).value;
   const userID = user.id;
-  console.log(userID);
 
   const [attendance, setAttendance] = React.useState([]);
   const [dataFetched, setDataFetched] = React.useState(false);
@@ -34,7 +33,7 @@ function Heatmap() {
   }
 
   React.useEffect(() => {
-    getAttendance(); // Fetch attendance on component mount
+    getAttendance(); 
   }, []);
   
   console.log("dsfksjdfs");
@@ -61,10 +60,11 @@ function Heatmap() {
           }}
 
           // tooltipDataAttrs={(value) => {
+          //   if (value.date === null) return null;
           //   return {
           //     "data-tip": `${
           //       value.count
-          //     } submissions on {${value.date.toString().slice(4, 15)}`
+          //     } classes attended on {${value.date.toString().slice(4, 15)}`
           //   };
           // }}
           showWeekdayLabels={false}

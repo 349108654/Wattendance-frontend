@@ -14,11 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from "react-router-dom";
 import cover from "./images/background.png";
 
-const pages = [{ name: 'Dashboard', link: "home" },
-
-//v temp access for development
-{ name: 'Profile2', link: "profile" }
-];
+const pages = [{ name: 'Dashboard', link: "home" }];
 const signinPages = [{ name: 'Sign up', link: "signup" }, { name: 'Login', link: "login" }]
 const settings = [{ name: 'Profile', link: "profile" }];
 

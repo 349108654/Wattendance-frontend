@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -7,8 +8,12 @@ import Slider from './Slider';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 
+import UserContext from './UserContext.js';
 
 const font = "'Poppins', sans-serif";
 
@@ -25,6 +30,40 @@ const theme = createTheme({
 
 
 function Survey() {
+    const user = React.useContext(UserContext).value;
+    const userID = user.id;
+    
+    const [courses, setCourses] = React.useState([{courseName:"test", courseCode:"test"}]);
+    const [dataFetched, setDataFetched] = React.useState(false);
+
+    const getCourses = async() => {
+        const options = {
+            mode: 'cors',
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/JSON' },
+            body: JSON.stringify({
+                'userID': userID,
+            })
+        }
+        const response = await fetch('http://localhost:3600/get-enrolled-courses', options);
+        const result = await response.json();
+        console.log(result);
+        setCourses(result); 
+        setDataFetched(true);
+    }
+
+    
+    React.useEffect(() => {
+        getCourses(); 
+      }, []);
+
+    const menuItems = courses.map(course => (
+        <MenuItem key={course.idcourses} value={course.idcourses}>
+            {`${course.courseCode} (${course.courseName})`}
+        </MenuItem>
+    ));
+    
+      
     const [sliderValues, setSliderValues] = useState({
         q1: 1,
         q2: 1,
@@ -39,24 +78,32 @@ function Survey() {
     };
     const handleSubmit = async () => {
         console.log(sliderValues);
+        console.log(course);
 
         const options = {
             mode: 'cors',
             method: 'POST',
             headers: { 'Content-Type': 'application/JSON' },
             body: JSON.stringify({
-                q1: sliderValues['q1'],
-                q2: sliderValues['q2'],
-                q3: sliderValues['q3'],
-                q4: sliderValues['q4'],
+                'courseID': course,
+                'userID': userID,
+                'q1': sliderValues['q1'],
+                'q2': sliderValues['q2'],
+                'q3': sliderValues['q3'],
+                'q4': sliderValues['q4'],
 
             })
         }
-        const response = await fetch('http://localhost:3600/survey', options);
+        const response = await fetch('http://localhost:3600/set-survey-result', options);
         const result = await response.json();
         console.log(result);
     };
 
+    const [course, setCourse] = React.useState('');
+
+    const handleChange = (event) => {
+        setCourse(event.target.value);
+    };
 
     return (
         <>
@@ -69,9 +116,25 @@ function Survey() {
 
             <ThemeProvider theme={theme}>
                 <Stack spacing={2} direction="column" sx={{ pr: '250px', pl: '250px', pt: '100px' }} alignItems="center">
+
                     <Typography variant="h4" gutterBottom>
                         Academic Survey
                     </Typography>
+                    <FormControl>
+                        <InputLabel id="course">Course</InputLabel>
+                        <Select
+                            labelId="course"
+                            id="select"
+                            value={course}
+                            label="Course"
+                            onChange={handleChange}
+                            sx={{ minWidth: '150px' }}
+
+                        >
+                            {dataFetched ? menuItems : menuItems}
+
+                        </Select>
+                    </FormControl>
                     <Box >
                         <Typography variant="h6" gutterBottom>
                             On a scale of 1 - 10, how often do you attend lectures for this class?
@@ -106,8 +169,9 @@ function Survey() {
 
                     <br></br>
                     <br></br>
+                    <Link to='/profile'>
                     <Button variant="contained" color="primary" onClick={handleSubmit}
-                        sx={{ ml: '60px', display: 'block', width: "200px" }}>Submit</Button>
+                        sx={{ ml: '60px', display: 'block', width: "200px" }}>Submit</Button></Link>
                     <br></br>
                     <br></br>
                     <br></br>
